@@ -79,21 +79,21 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-5 py-16">
+    <main className="min-h-screen flex items-center justify-center px-5 py-12 sm:py-16">
       <div className="w-full max-w-xl">
-        <div className="mb-10 text-center">
+        <div className="mb-8 sm:mb-10 text-center">
           <p
-            className="text-2xl tracking-tight"
+            className="rise-once inline-block text-[2.8rem] sm:text-[3.4rem] leading-none tracking-tight bg-gradient-to-r from-marigold via-[#f6c56b] to-teal bg-clip-text text-transparent"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            inspiroo<span className="text-marigold">.</span>
+            inspiroo<span className="text-teal">.</span>
           </p>
         </div>
 
         {!result && (
           <div className="rise-once">
             <h1
-              className="text-[2.1rem] leading-[1.15] mb-7 text-center"
+              className="text-[clamp(1.6rem,6vw,2.1rem)] leading-[1.15] mb-6 sm:mb-7 text-center"
               style={{ fontFamily: "var(--font-display)" }}
             >
               qual momento da sua vida você está atravessando agora?

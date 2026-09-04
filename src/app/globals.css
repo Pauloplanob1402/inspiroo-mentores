@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Instrument Serif", serif;
-  --font-body: "Plus Jakarta Sans", sans-serif;
 }
 
 * {

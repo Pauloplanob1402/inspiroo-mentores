@@ -105,7 +105,7 @@ export default function ChatPage() {
 
   return (
     <main className="min-h-screen flex flex-col">
-      <header className="px-5 py-4 border-b border-[#3a2f47] flex items-center gap-3">
+      <header className="px-4 sm:px-5 py-4 border-b border-[#3a2f47] flex items-center gap-3">
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-marigold to-teal shrink-0" />
         <div className="min-w-0">
           <p
