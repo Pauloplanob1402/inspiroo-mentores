@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSessionId } from "@/lib/session";
 import { callFunction } from "@/lib/api";
+import Onboarding from "./Onboarding";
 
 type Mentor = {
   id: string;
@@ -40,6 +41,19 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<MatchResponse | null>(null);
   const [startingId, setStartingId] = useState<string | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [checkedOnboarding, setCheckedOnboarding] = useState(false);
+
+  useEffect(() => {
+    const seen = localStorage.getItem("inspiroo_onboarded");
+    setShowOnboarding(!seen);
+    setCheckedOnboarding(true);
+  }, []);
+
+  function finishOnboarding() {
+    localStorage.setItem("inspiroo_onboarded", "1");
+    setShowOnboarding(false);
+  }
 
   async function handleSubmit() {
     if (!text.trim() || loading) return;
@@ -78,6 +92,9 @@ export default function Home() {
     }
   }
 
+  if (!checkedOnboarding) return null;
+  if (showOnboarding) return <Onboarding onFinish={finishOnboarding} />;
+
   return (
     <main className="min-h-screen flex items-center justify-center px-5 py-12 sm:py-16">
       <div className="w-full max-w-xl">
@@ -88,6 +105,12 @@ export default function Home() {
           >
             inspiroo<span className="text-teal">.</span>
           </p>
+          <button
+            onClick={() => setShowOnboarding(true)}
+            className="mt-2 text-xs text-dim hover:text-marigold transition-colors underline underline-offset-2"
+          >
+            como funciona
+          </button>
         </div>
 
         {!result && (
