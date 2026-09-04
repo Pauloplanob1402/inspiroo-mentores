@@ -16,6 +16,7 @@ type Mentor = {
   rating: number;
   sessions_count: number;
   weekly_slots: number;
+  photo_url: string | null;
   similarity: number;
 };
 
@@ -146,6 +147,15 @@ export default function Home() {
             <p className="mt-4 text-center text-xs text-dim">
               3 conversas grátis. sem cadastro pra começar.
             </p>
+            <p className="mt-2 text-center text-xs text-dim">
+              já passou por algo assim?{" "}
+              <a
+                href="/seja-mentor"
+                className="text-marigold underline underline-offset-2"
+              >
+                seja mentor da tribo
+              </a>
+            </p>
           </div>
         )}
 
@@ -264,24 +274,42 @@ function MentorCard({
           : "rounded-3xl p-5 bg-panel border border-[#3a2f47]"
       }
     >
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <div>
-          <p
-            className={featured ? "text-xl" : "text-lg"}
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            {mentor.name}
-          </p>
-          <p className="text-xs text-teal mt-0.5">
-            {CATEGORY_LABEL[mentor.category] ?? mentor.category}
-            {mentor.verified ? " · verificado" : ""}
-          </p>
+      <div className="flex items-start gap-3 mb-2">
+        <div
+          className={
+            featured
+              ? "w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gradient-to-br from-marigold to-teal"
+              : "w-10 h-10 rounded-full overflow-hidden shrink-0 bg-gradient-to-br from-marigold to-teal"
+          }
+        >
+          {mentor.photo_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={mentor.photo_url}
+              alt={mentor.name}
+              className="w-full h-full object-cover"
+            />
+          )}
         </div>
-        <div className="text-right shrink-0">
-          <p className="text-sm text-marigold">★ {mentor.rating.toFixed(1)}</p>
-          <p className="text-[0.7rem] text-dim mt-0.5">
-            {mentor.sessions_count} sessões
-          </p>
+        <div className="flex-1 flex items-start justify-between gap-3">
+          <div>
+            <p
+              className={featured ? "text-xl" : "text-lg"}
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {mentor.name}
+            </p>
+            <p className="text-xs text-teal mt-0.5">
+              {CATEGORY_LABEL[mentor.category] ?? mentor.category}
+              {mentor.verified ? " · verificado" : ""}
+            </p>
+          </div>
+          <div className="text-right shrink-0">
+            <p className="text-sm text-marigold">★ {mentor.rating.toFixed(1)}</p>
+            <p className="text-[0.7rem] text-dim mt-0.5">
+              {mentor.sessions_count} sessões
+            </p>
+          </div>
         </div>
       </div>
 
