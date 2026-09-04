@@ -4,23 +4,23 @@ import { useState } from "react";
 
 const STEPS = [
   {
-    headline: "Parece que você chegou aqui carregando alguma coisa.",
-    body: "Não tem problema não saber o próximo passo agora. É exatamente pra isso que a tribo existe.",
+    headline: "Você chegou aqui carregando alguma coisa.",
+    body: "A partir de agora, você decide o que fazer com isso.",
     cta: "Continuar",
   },
   {
-    headline: "Você escreve o que está vivendo. A IA já sabe quem já viveu isso.",
-    body: "Nada de perfil pra preencher, nada de currículo pra ler. Só o momento certo, encontrando a pessoa certa, em segundos.",
+    headline: "Você escreve o que sente.",
+    body: "Nossa inteligência encontra quem já sentiu igual — em segundos, sem perfil pra preencher.",
     cta: "Continuar",
   },
   {
-    headline: "Você não está entrando num app. Está entrando numa tribo.",
-    body: "Mentores reais e verificados, que já atravessaram o que você está atravessando agora — e escolheram ficar por perto pra ajudar quem vem depois.",
+    headline: "Você não entrou num app.",
+    body: "Entrou numa tribo de mentores que chegaram aqui quando tudo ainda era mato.",
     cta: "Continuar",
   },
   {
-    headline: "Essa história é seu, não do mentor.",
-    body: "Você decide o momento. Você escolhe quem te ajuda. Você escreve o que vem depois. A gente só garante que você não faça isso sozinho.",
+    headline: "Essa história é sua, não do mentor.",
+    body: "Você decide o momento. Você escolhe quem te ajuda. Você escreve o que vem depois.",
     cta: "encontrar meu mentor",
   },
 ];

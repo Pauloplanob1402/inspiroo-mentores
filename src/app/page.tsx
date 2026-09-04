@@ -151,22 +151,28 @@ export default function Home() {
 
         {result && (
           <div className="rise-once">
-            <p className="text-center text-sm text-dim mb-6">
-              encontramos {result.mentors.length} mentores que já ajudaram
-              gente na sua situação
-            </p>
+            {result.mentors.length > 0 ? (
+              <>
+                <p className="text-center text-sm text-dim mb-6">
+                  encontramos {result.mentors.length} mentores que já
+                  ajudaram gente na sua situação
+                </p>
 
-            <div className="flex flex-col gap-4">
-              {result.mentors.map((mentor, i) => (
-                <MentorCard
-                  key={mentor.id}
-                  mentor={mentor}
-                  featured={i === 0}
-                  loading={startingId === mentor.id}
-                  onSelect={() => handleStartConversation(mentor.id)}
-                />
-              ))}
-            </div>
+                <div className="flex flex-col gap-4">
+                  {result.mentors.map((mentor, i) => (
+                    <MentorCard
+                      key={mentor.id}
+                      mentor={mentor}
+                      featured={i === 0}
+                      loading={startingId === mentor.id}
+                      onSelect={() => handleStartConversation(mentor.id)}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <ReferralOpportunity momentText={text} />
+            )}
 
             {error && (
               <p className="mt-4 text-sm text-[#e08a8a] text-center">
@@ -187,6 +193,55 @@ export default function Home() {
         )}
       </div>
     </main>
+  );
+}
+
+function ReferralOpportunity({ momentText }: { momentText: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const shareText = `Tô no inspiroo. — escrevi "${momentText.slice(
+    0,
+    80
+  )}${momentText.length > 80 ? "..." : ""}" e tô procurando quem já passou por isso. Se você (ou alguém que você conhece) já viveu essa experiência e topa compartilhar como fez, dá uma olhada na plataforma — nossa tribo de mentores cresce assim.`;
+
+  async function handleShare() {
+    if (typeof navigator !== "undefined" && "share" in navigator) {
+      try {
+        await navigator.share({ text: shareText });
+        return;
+      } catch {
+        // pessoa cancelou o compartilhamento nativo — cai pro fallback
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // clipboard indisponível — sem mais fallback necessário aqui
+    }
+  }
+
+  return (
+    <div className="rounded-3xl p-6 bg-panel border border-marigold/30 text-center">
+      <p
+        className="text-xl mb-3"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        ainda não tem ninguém na tribo pra esse momento específico.
+      </p>
+      <p className="text-sm text-dim leading-relaxed mb-5">
+        você conhece alguém que já viveu exatamente isso e topa compartilhar
+        como fez? essa pessoa pode ser a próxima mentora da tribo — e você é
+        quem vai levar ela até aqui.
+      </p>
+      <button
+        onClick={handleShare}
+        className="w-full bg-marigold text-ink font-semibold rounded-2xl py-3.5 text-sm hover:opacity-90 transition-opacity"
+      >
+        {copied ? "copiado — cola pra essa pessoa" : "indicar alguém pra tribo"}
+      </button>
+    </div>
   );
 }
 

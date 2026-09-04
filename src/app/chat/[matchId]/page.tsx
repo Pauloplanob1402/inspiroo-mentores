@@ -118,7 +118,7 @@ export default function ChatPage() {
             {humanRequested
               ? "conversa passada pro mentor de verdade"
               : aiPersona
-              ? "respostas geradas a partir do conteúdo do mentor"
+              ? "respostas vindas do que ele(a) já ensinou por aqui"
               : "mentor verificado"}
           </p>
         </div>
@@ -126,9 +126,9 @@ export default function ChatPage() {
 
       {aiPersona && !humanRequested && (
         <div className="mx-5 mt-4 rounded-2xl border border-marigold/30 bg-marigold/10 px-4 py-3 text-xs text-paper leading-relaxed">
-          as primeiras respostas vêm de uma IA treinada no conteúdo de{" "}
-          {mentorName} — quando quiser, é só pedir pra falar com ele(a)
-          direto.
+          as primeiras respostas vêm da nossa inteligência, construída a
+          partir do que {mentorName} já ensinou por aqui — quando quiser, é
+          só pedir pra falar com ele(a) direto.
           <button
             onClick={handleRequestHuman}
             className="block mt-2 text-marigold font-semibold hover:opacity-80"
