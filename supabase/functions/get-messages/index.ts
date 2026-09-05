@@ -31,13 +31,20 @@ serve(async (req: Request) => {
 
     const { data: match, error: matchErr } = await supabase
       .from("matches")
-      .select("id, session_id, human_requested, mentor_id, mentors(name, ai_persona)")
+      .select("id, session_id, human_requested, mentor_id")
       .eq("id", match_id)
       .maybeSingle();
 
     if (matchErr) throw matchErr;
     if (!match) return jsonError("match não encontrado", 404);
     if (match.session_id !== session_id) return jsonError("acesso negado", 403);
+
+    const { data: mentor, error: mentorErr } = await supabase
+      .from("mentors")
+      .select("name, ai_persona")
+      .eq("id", match.mentor_id)
+      .maybeSingle();
+    if (mentorErr) throw mentorErr;
 
     const { data: messages, error: msgErr } = await supabase
       .from("messages")
@@ -47,14 +54,12 @@ serve(async (req: Request) => {
 
     if (msgErr) throw msgErr;
 
-    const mentorInfo = Array.isArray(match.mentors) ? match.mentors[0] : match.mentors;
-
     return new Response(
       JSON.stringify({
         messages: messages ?? [],
         human_requested: match.human_requested,
-        mentor_name: mentorInfo?.name ?? "mentor",
-        ai_persona: mentorInfo?.ai_persona ?? false,
+        mentor_name: mentor?.name ?? "mentor",
+        ai_persona: mentor?.ai_persona ?? false,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );

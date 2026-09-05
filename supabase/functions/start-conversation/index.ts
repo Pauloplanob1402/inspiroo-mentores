@@ -75,6 +75,21 @@ serve(async (req: Request) => {
       .single();
     if (matchErr) throw matchErr;
 
+    // 4. primeira mensagem, automática, do mentor — só na criação
+    // de um match novo (nunca num match reusado)
+    const welcomeText =
+      "oi! que bom que você chegou até aqui.\n\n" +
+      "hoje a inspiroo ainda é quase tudo mato — poucos mentores, começo de tudo. " +
+      "mas vai virar uma tribo enorme, e quando isso acontecer, você vai saber que foi um dos primeiros a pisar aqui.\n\n" +
+      "me conta, o que te trouxe até esse momento?";
+
+    await supabase.from("messages").insert({
+      match_id: newMatch.id,
+      sender: "mentor",
+      content: welcomeText,
+      ai_generated: true,
+    });
+
     return new Response(
       JSON.stringify({
         match_id: newMatch.id,

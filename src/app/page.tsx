@@ -100,18 +100,20 @@ export default function Home() {
     <main className="min-h-screen flex items-center justify-center px-5 py-12 sm:py-16">
       <div className="w-full max-w-xl">
         <div className="mb-8 sm:mb-10 text-center">
-          <p
-            className="rise-once inline-block text-[2.8rem] sm:text-[3.4rem] leading-none tracking-tight bg-gradient-to-r from-marigold via-[#f6c56b] to-teal bg-clip-text text-transparent"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            inspiroo<span className="text-teal">.</span>
-          </p>
-          <button
-            onClick={() => setShowOnboarding(true)}
-            className="mt-2 text-xs text-dim hover:text-marigold transition-colors underline underline-offset-2"
-          >
-            como funciona
-          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="inspiroo."
+            className="rise-once inline-block h-10 sm:h-12 w-auto"
+          />
+          <div className="mt-1">
+            <button
+              onClick={() => setShowOnboarding(true)}
+              className="text-xs text-dim hover:text-marigold transition-colors underline underline-offset-2"
+            >
+              como funciona
+            </button>
+          </div>
         </div>
 
         {!result && (
