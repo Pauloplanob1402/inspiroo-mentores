@@ -99,14 +99,21 @@ export default function Home() {
   return (
     <main className="min-h-screen flex items-center justify-center px-5 py-12 sm:py-16">
       <div className="w-full max-w-xl">
-        <div className="mb-8 sm:mb-10 text-center">
+        <div className="mb-8 sm:mb-10 text-center relative">
+          <div
+            className="rise-once absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-24 sm:w-80 sm:h-28 rounded-full blur-3xl opacity-30 pointer-events-none"
+            style={{
+              background:
+                "radial-gradient(ellipse, #F2A93B 0%, #4FB6A6 60%, transparent 80%)",
+            }}
+          />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
             alt="inspiroo."
-            className="rise-once inline-block h-10 sm:h-12 w-auto"
+            className="rise-once relative inline-block h-16 sm:h-20 w-auto"
           />
-          <div className="mt-1">
+          <div className="mt-2">
             <button
               onClick={() => setShowOnboarding(true)}
               className="text-xs text-dim hover:text-marigold transition-colors underline underline-offset-2"
