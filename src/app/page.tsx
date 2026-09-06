@@ -54,6 +54,7 @@ export default function Home() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
   const [tribe, setTribe] = useState<TribeMentor[]>([]);
+  const [showTribe, setShowTribe] = useState(false);
 
   useEffect(() => {
     callFunction<{ mentors: TribeMentor[] }>("list-mentors", {})
@@ -238,35 +239,40 @@ export default function Home() {
       </div>
 
       {tribe.length > 0 && (
-        <aside className="w-full md:w-64 shrink-0 order-first md:order-last">
-          <p className="text-xs text-dim mb-3 md:text-left text-center">
-            já na tribo
-          </p>
-          <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
-            {tribe.slice(0, 8).map((m) => (
-              <div
-                key={m.id}
-                className="flex items-center gap-3 bg-panel border border-[#3a2f47] rounded-2xl px-3 py-2.5 shrink-0 md:w-full"
-              >
-                <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-gradient-to-br from-marigold to-teal">
-                  {m.photo_url && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={m.photo_url}
-                      alt={m.name}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
+        <aside className="w-full md:w-64 shrink-0">
+          <button
+            onClick={() => setShowTribe((v) => !v)}
+            className="text-xs text-dim hover:text-marigold transition-colors underline underline-offset-2 mb-3 block mx-auto md:mx-0"
+          >
+            {showTribe ? "esconder" : "ver quem já tá na tribo"}
+          </button>
+          {showTribe && (
+            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0 rise-once">
+              {tribe.slice(0, 8).map((m) => (
+                <div
+                  key={m.id}
+                  className="flex items-center gap-3 bg-panel border border-[#3a2f47] rounded-2xl px-3 py-2.5 shrink-0 md:w-full"
+                >
+                  <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-gradient-to-br from-marigold to-teal">
+                    {m.photo_url && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={m.photo_url}
+                        alt={m.name}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium truncate">{m.name}</p>
+                    <p className="text-[0.68rem] text-teal">
+                      {CATEGORY_LABEL[m.category] ?? m.category}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-medium truncate">{m.name}</p>
-                  <p className="text-[0.68rem] text-teal">
-                    {CATEGORY_LABEL[m.category] ?? m.category}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </aside>
       )}
       </div>

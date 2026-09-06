@@ -140,15 +140,25 @@ export default function ChatPage() {
 
       <div className="flex-1 overflow-y-auto thin-scroll px-5 py-5 flex flex-col gap-3">
         {messages.map((m) => (
-          <div
-            key={m.id}
-            className={
-              m.sender === "user"
-                ? "self-end max-w-[78%] bg-marigold text-ink rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed"
-                : "self-start max-w-[78%] bg-panel border border-[#3a2f47] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed"
-            }
-          >
-            {m.content}
+          <div key={m.id} className={m.sender === "user" ? "self-end" : "self-start"}>
+            <div
+              className={
+                m.sender === "user"
+                  ? "max-w-[78%] ml-auto bg-marigold text-ink rounded-2xl rounded-br-sm px-4 py-2.5 text-sm leading-relaxed"
+                  : "max-w-[78%] bg-panel border border-[#3a2f47] rounded-2xl rounded-bl-sm px-4 py-2.5 text-sm leading-relaxed"
+              }
+            >
+              {m.content}
+            </div>
+            {m.sender === "mentor" && (
+              <a
+                href={`/carta?texto=${encodeURIComponent(m.content)}&mentor=${encodeURIComponent(mentorName)}`}
+                target="_blank"
+                className="block mt-1 text-[0.7rem] text-dim hover:text-marigold transition-colors"
+              >
+                guardar esse conselho
+              </a>
+            )}
           </div>
         ))}
         {sending && (
