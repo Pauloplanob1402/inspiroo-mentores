@@ -122,6 +122,7 @@ export default function SejaMentor() {
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             placeholder="seu nome"
             className="bg-panel border border-[#3a2f47] rounded-xl px-4 py-3 text-sm outline-none focus:border-marigold transition-colors"
           />
@@ -142,6 +143,12 @@ export default function SejaMentor() {
           <textarea
             value={bio}
             onChange={(e) => setBio(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
             placeholder="conte, em poucas linhas, o problema concreto que você ajuda as pessoas a resolver"
             maxLength={600}
             rows={4}
@@ -151,6 +158,7 @@ export default function SejaMentor() {
           <input
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             placeholder="seu e-mail ou whatsapp, pra gente te avisar"
             className="bg-panel border border-[#3a2f47] rounded-xl px-4 py-3 text-sm outline-none focus:border-marigold transition-colors"
           />

@@ -35,6 +35,15 @@ const CATEGORY_LABEL: Record<string, string> = {
   financas: "finanças",
 };
 
+type TribeMentor = {
+  id: string;
+  name: string;
+  photo_url: string | null;
+  category: string;
+  rating: number;
+  sessions_count: number;
+};
+
 export default function Home() {
   const router = useRouter();
   const [text, setText] = useState("");
@@ -44,6 +53,15 @@ export default function Home() {
   const [startingId, setStartingId] = useState<string | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [checkedOnboarding, setCheckedOnboarding] = useState(false);
+  const [tribe, setTribe] = useState<TribeMentor[]>([]);
+
+  useEffect(() => {
+    callFunction<{ mentors: TribeMentor[] }>("list-mentors", {})
+      .then((data) => setTribe(data.mentors))
+      .catch(() => {
+        // lista lateral é só reforço visual — se falhar, segue sem ela
+      });
+  }, []);
 
   useEffect(() => {
     const seen = localStorage.getItem("inspiroo_onboarded");
@@ -98,7 +116,8 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex items-center justify-center px-5 py-12 sm:py-16">
-      <div className="w-full max-w-xl">
+      <div className="w-full max-w-4xl flex flex-col md:flex-row gap-10 items-start justify-center">
+      <div className="w-full max-w-xl mx-auto md:mx-0">
         <div className="mb-8 sm:mb-10 text-center relative">
           <div
             className="rise-once absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-24 sm:w-80 sm:h-28 rounded-full blur-3xl opacity-30 pointer-events-none"
@@ -135,6 +154,12 @@ export default function Home() {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
               placeholder="escreve com suas palavras — quanto mais específico, melhor o mentor que a gente encontra"
               maxLength={500}
               rows={5}
@@ -210,6 +235,40 @@ export default function Home() {
             </button>
           </div>
         )}
+      </div>
+
+      {tribe.length > 0 && (
+        <aside className="w-full md:w-64 shrink-0 order-first md:order-last">
+          <p className="text-xs text-dim mb-3 md:text-left text-center">
+            já na tribo
+          </p>
+          <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0">
+            {tribe.slice(0, 8).map((m) => (
+              <div
+                key={m.id}
+                className="flex items-center gap-3 bg-panel border border-[#3a2f47] rounded-2xl px-3 py-2.5 shrink-0 md:w-full"
+              >
+                <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-gradient-to-br from-marigold to-teal">
+                  {m.photo_url && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={m.photo_url}
+                      alt={m.name}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-medium truncate">{m.name}</p>
+                  <p className="text-[0.68rem] text-teal">
+                    {CATEGORY_LABEL[m.category] ?? m.category}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      )}
       </div>
     </main>
   );
