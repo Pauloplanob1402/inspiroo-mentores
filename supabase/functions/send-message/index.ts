@@ -24,7 +24,7 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 // ajuste aqui se quiser trocar o modelo de texto usado na resposta
-const GEMINI_TEXT_MODEL = "gemini-2.0-flash";
+const GEMINI_TEXT_MODEL = "gemini-3.5-flash";
 const DAILY_LIMIT_PER_SESSION = 50;
 
 const corsHeaders = {
@@ -122,32 +122,43 @@ serve(async (req: Request) => {
     }
 
     // 1. embedding da pergunta do usuário
-    const queryEmbedding = await getEmbeddingWithBackoff(content);
+    let replyText: string | null = null;
+    try {
+      const queryEmbedding = await getEmbeddingWithBackoff(content);
 
-    // 2. busca os temas mais relevantes do material
-    const { data: wisdom, error: wisdomErr } = await supabase.rpc(
-      "find_nearest_wisdom",
-      { query_embedding: queryEmbedding, match_limit: 4 }
-    );
-    if (wisdomErr) throw wisdomErr;
+      // 2. busca os temas mais relevantes do material
+      const { data: wisdom, error: wisdomErr } = await supabase.rpc(
+        "find_nearest_wisdom",
+        { query_embedding: queryEmbedding, match_limit: 4 }
+      );
+      if (wisdomErr) throw wisdomErr;
 
-    // 3. pega o histórico recente da conversa (últimas 10 mensagens)
-    const { data: history } = await supabase
-      .from("messages")
-      .select("sender, content")
-      .eq("match_id", match_id)
-      .order("created_at", { ascending: false })
-      .limit(10);
-    const recentHistory = (history ?? []).reverse();
+      // 3. pega o histórico recente da conversa (últimas 10 mensagens)
+      const { data: history } = await supabase
+        .from("messages")
+        .select("sender, content")
+        .eq("match_id", match_id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+      const recentHistory = (history ?? []).reverse();
 
-    // 4. gera a resposta
-    const replyText = await generateMentorReply(
-      mentor.name,
-      mentor.bio,
-      wisdom ?? [],
-      recentHistory,
-      content
-    );
+      // 4. gera a resposta
+      replyText = await generateMentorReply(
+        mentor.name,
+        mentor.bio,
+        wisdom ?? [],
+        recentHistory,
+        content
+      );
+    } catch (aiErr) {
+      console.error("mentor-reply generation failed:", aiErr);
+      // não propaga — a mensagem do usuário já foi salva, só não
+      // vai ter resposta automática dessa vez
+      return new Response(
+        JSON.stringify({ ok: true, ai_reply: false, ai_error: true }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const { error: replyInsertErr } = await supabase.from("messages").insert({
       match_id,
